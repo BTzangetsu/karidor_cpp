@@ -76,6 +76,7 @@ class Game:
         return {
             "game_code": self.game_code,
             "started": self.started,
+            "board_size"  : self.board.size,
             "finished": self.finished,
             "winner": self.winner,
             "current_turn": self.board.playerturn,  # index of the player whose turn it is

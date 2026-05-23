@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Karidor — Lobby</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/game.css') }}" />
+</head>
+
+<body>
+<div class="lobby-wrap">
+
+  <div class="lobby-logo">Kari<span>dor</span></div>
+  <p class="lobby-sub">Le jeu de murs et de stratégie</p>
+
+  <!-- ── Créer une partie ─────────────────────────────── -->
+  <div class="lobby-card" id="card-create">
+    <h2>Créer une partie</h2>
+
+    <div>
+      <label class="field-label" for="create-name">Ton pseudo</label>
+      <input class="field-input" id="create-name" type="text"
+             placeholder="Ex: Alice" maxlength="16" autocomplete="off" />
+    </div>
+
+    <div>
+      <label class="field-label">Ta couleur</label>
+      <div class="color-picker" id="create-color-picker"></div>
+    </div>
+
+    <div>
+      <label class="field-label">Nombre de joueurs</label>
+      <div class="player-count-btns" id="player-count-btns">
+        <button class="pc-btn sel" data-n="2" onclick="selectCount(2)">2</button>
+        <button class="pc-btn"     data-n="3" onclick="selectCount(3)">3</button>
+        <button class="pc-btn"     data-n="4" onclick="selectCount(4)">4</button>
+      </div>
+    </div>
+
+    <button class="big-btn" onclick="createGame()">
+      <i class="ti ti-plus" aria-hidden="true"></i> Créer la partie
+    </button>
+  </div>
+
+  <!-- ── Salle d'attente (après création) ─────────────── -->
+  <div class="lobby-card" id="card-waiting" style="display:none;">
+    <h2>En attente des joueurs…</h2>
+
+    <div>
+      <label class="field-label">Code de la partie</label>
+      <div class="code-display" id="waiting-code">----</div>
+    </div>
+
+    <div>
+      <label class="field-label">Joueurs connectés</label>
+      <div class="waiting-list" id="waiting-list"></div>
+    </div>
+
+    <p style="font-size:12px;font-weight:600;color:var(--text-muted);text-align:center;">
+      La partie démarre automatiquement quand tout le monde est là.
+    </p>
+  </div>
+
+  <div class="divider">ou</div>
+
+  <!-- ── Rejoindre une partie ─────────────────────────── -->
+  <div class="lobby-card" id="card-join">
+    <h2>Rejoindre une partie</h2>
+
+    <div>
+      <label class="field-label" for="join-name">Ton pseudo</label>
+      <input class="field-input" id="join-name" type="text"
+             placeholder="Ex: Bob" maxlength="16" autocomplete="off" />
+    </div>
+
+    <div>
+      <label class="field-label">Ta couleur</label>
+      <div class="color-picker" id="join-color-picker"></div>
+    </div>
+
+    <div>
+      <label class="field-label" for="join-code">Code de la partie</label>
+      <input class="field-input" id="join-code" type="text"
+             placeholder="Ex: 4782" maxlength="4"
+             inputmode="numeric" pattern="[0-9]*" autocomplete="off" />
+    </div>
+
+    <button class="big-btn" style="background:var(--c1);box-shadow:0 4px 0 var(--c1s);"
+            onclick="joinGame()">
+      <i class="ti ti-door-enter" aria-hidden="true"></i> Rejoindre
+    </button>
+
+    <p class="error-msg" id="join-error"
+       style="display:none;font-size:13px;font-weight:700;color:#E24B4A;text-align:center;">
+      Code invalide ou partie introuvable.
+    </p>
+  </div>
+
+</div>
+
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+<script src="{{ url_for('static', filename='js/socket.js') }}"></script>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

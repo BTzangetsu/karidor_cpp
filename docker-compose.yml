@@ -1,0 +1,21 @@
+services:
+  karidor:
+    # Build the image from the Dockerfile in the current directory
+    build: .
+
+    # Name the running container for easy reference (docker logs karidor, etc.)
+    container_name: karidor
+
+    # Map host port 5000 to container port 5000
+    # Change the left value to use a different host port: e.g. "8080:5000"
+    ports:
+      - "5000:5000"
+
+    # Restart automatically if the container crashes
+    restart: unless-stopped
+
+    # Environment variables passed into the container
+    # Override SECRET_KEY with a strong random value in production
+    environment:
+      - SECRET_KEY=change-me-in-production
+      - FLASK_ENV=production

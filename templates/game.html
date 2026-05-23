@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Karidor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/game.css') }}" />
+</head>
+
+<!-- dark mode by default — JS adds .light on toggle -->
+<body>
+
+  <!-- Top bar -->
+  <div class="topbar">
+    <div class="logo">Kari<span>dor</span></div>
+    <button class="theme-btn" id="theme-btn" onclick="toggleTheme()">
+      <i class="ti ti-sun" aria-hidden="true"></i>
+      <span id="theme-label">Light</span>
+    </button>
+  </div>
+
+  <!-- Players bar (filled by JS) -->
+  <div class="players-bar" id="players-bar"></div>
+
+  <!-- Board -->
+  <div class="board-outer">
+    <div class="board" id="board"></div>
+  </div>
+
+  <!-- Action row -->
+  <div class="action-row" id="action-row"></div>
+
+  <!-- Win overlay (hidden by default, shown by JS) -->
+  <div class="win-overlay" id="win-overlay" style="display:none;">
+    <div class="win-card">
+      <div class="win-trophy">🏆</div>
+      <div class="win-title" id="win-title">Victoire !</div>
+      <div class="win-sub"  id="win-sub"></div>
+      <!-- only creator sees these buttons — JS handles visibility -->
+      <button class="win-btn" id="btn-replay"
+              style="display:none; background:var(--c0); box-shadow:0 4px 0 var(--c0s);"
+              onclick="requestReplay()">
+        Rejouer
+      </button>
+      <button class="win-btn secondary" id="btn-newgame"
+              style="display:none;"
+              onclick="requestNewGame()">
+        Nouvelle partie
+      </button>
+      <!-- non-creators see a waiting message -->
+      <div id="win-waiting" style="display:none;font-size:13px;font-weight:600;color:var(--text-muted);">
+        En attente du créateur…
+      </div>
+    </div>
+  </div>
+
+  <!-- Socket.io client (served by Flask-SocketIO) -->
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script src="{{ url_for('static', filename='js/socket.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/game.js') }}"></script>
+</body>
+</html>
