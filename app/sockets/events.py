@@ -148,6 +148,35 @@ def register_events(socketio: SocketIO):
         # notify all clients still in the SocketIO room to reset their UI
         emit('game_restart', {'game_code': game_code}, to=game_code)
 
+    @socketio.on('rejoin_game')
+    def handle_rejoin_game(data):
+        """Receives {game_code, color}.
+        Called by game.js on connect to re-register the new sid
+        after the page redirect from the lobby.
+        Finds the player by color match, re-registers the sid,
+        re-joins the SocketIO room."""
+
+        game = room_manager.get_game(data['game_code'])
+        if not game:
+            emit('error', {'message': 'Game not found'})
+            return
+
+        # find the player index by matching color
+        player_index = next(
+            (i for i, p in enumerate(game.board.players) if p.color == data['color']),
+            None
+        )
+        if player_index is None:
+            emit('error', {'message': 'Player color not found'})
+            return
+
+        # re-join the SocketIO room and re-register the new sid
+        join_room(data['game_code'])
+        room_manager.register_player(request.sid, data['game_code'], player_index)
+
+        # send the current state so game.js can render immediately
+        emit('game_state', game.get_state())
+
     @socketio.on('disconnect')
     def handle_disconnect():
         """No data.

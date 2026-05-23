@@ -11,3 +11,17 @@ const socket = io();
 socket.on('connect',    () => console.log('Karidor socket connected:', socket.id));
 socket.on('disconnect', () => console.log('Karidor socket disconnected'));
 socket.on('connect_error', (err) => console.error('Socket connection error:', err.message));
+// When the socket connects on the game page, re-register this client
+// because the sid changed after the page redirect from the lobby.
+socket.on('connect', () => {
+    const gameState = JSON.parse(sessionStorage.getItem('gameState') || 'null');
+    const myColor   = sessionStorage.getItem('myColor');
+
+    // only emit on the game page (both values must be present)
+    if (gameState && myColor) {
+        socket.emit('rejoin_game', {
+            game_code : gameState.game_code,
+            color     : myColor,
+        });
+    }
+});

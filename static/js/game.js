@@ -437,6 +437,12 @@ socket.on('game_restart', ({ game_code }) => {
     }
 });
 
+socket.on('game_state', (state) => {
+    gameState = state;
+    myIndex   = state.players.findIndex(p => p.color === myColor);
+    render();
+});
+
 // Server → client: a player disconnected mid-game.
 // Shows a brief notice but keeps the game running (server handles missing turns).
 socket.on('player_disconnected', ({ player_index, state }) => {
