@@ -1,27 +1,32 @@
-walli/
-├── app/
-│   ├── __init__.py          # factory Flask + SocketIO
-│   ├── routes.py            # routes HTTP (lobby, game pages)
-│   ├── models/
-│   │   ├── game.py          # GameState, logique de tour
-│   │   ├── board.py         # Board, validation murs (BFS)
-│   │   └── utils.py         # génération code numérique, helpers
-│   └── sockets/
-│       ├── events.py        # events SocketIO (move, place_wall, etc.)
-│       └── rooms.py         # gestion des rooms/parties
-├── static/
-│   ├── css/
-│   │   ├── main.css         # style global, lobby, écran fin
-│   │   └── game.css         # board, balles, murs, responsive
-│   └── js/
-│       ├── main.js          # lobby : créer/rejoindre
-│       ├── game.js          # rendu board + interactions
-│       └── socket.js        # client SocketIO, sync état
-├── templates/
-│   ├── index.html           # page d'accueil + lobby
-│   └── game.html            # page de jeu
-├── Dockerfile
-├── docker-compose.yml
-├── requirements.txt
-├── run.py                   # point d'entrée
-└── README.md
+karidor/
+│   .gitignore
+│   docker-compose.yml
+│   Dockerfile
+│   CMakeLists.txt
+│   README.md
+│   karidor_backend_doc.txt
+│   structure.txt
+│
+├───app/
+│   │   crow.h
+│   │   main.cpp
+│   ├───AsioLib/
+│   ├───crow/
+│   ├───models/
+│   │       board.hpp
+│   │       game.hpp
+│   └───sockets/
+│           events.hpp
+│           rooms.hpp
+│
+├───static/
+│   ├───css/
+│   │       game.css
+│   └───js/
+│           game.js
+│           main.js
+│           socket.js   ← à réécrire en WebSocket natif
+│
+└───templates/
+        game.html
+        index.html

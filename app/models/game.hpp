@@ -113,6 +113,26 @@ public:
         return false;
     }
 
+    void reset() {
+        //first we keep the information about the players and the number of players, then we delete the old board and create a new one with the same size, then we re-add the players to the new board and reset the game state
+        std::vector<std::pair<std::string, std::string>> player_info; // vector of (name, color) pairs
+        for(Player* player : board->players){
+            player_info.push_back({player->name, player->color});
+        }
+
+        
+        started = false;
+        finished = false;
+        winner = -1;
+
+        size_t num_players = board->players.size();
+        delete board;
+        board = new Board(get_board_size());
+        for(size_t i = 0; i < num_players; i++){
+            join(player_info[i].first, player_info[i].second);
+        }
+    }
+
     /* Returns the full game state as a crow::json::wvalue.
        This is broadcast to all clients via WebSocket after every valid action.
 
