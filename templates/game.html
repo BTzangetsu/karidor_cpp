@@ -8,10 +8,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css" />
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/game.css') }}" />
+  <!-- url_for() is Flask/Jinja2 only — Crow serves static files directly under /static/ -->
+  <link rel="stylesheet" href="/static/css/game.css" />
 </head>
 
-<!-- dark mode by default — JS adds .light on toggle -->
 <body>
 
   <!-- Top bar -->
@@ -40,7 +40,6 @@
       <div class="win-trophy">🏆</div>
       <div class="win-title" id="win-title">Victoire !</div>
       <div class="win-sub"  id="win-sub"></div>
-      <!-- only creator sees these buttons — JS handles visibility -->
       <button class="win-btn" id="btn-replay"
               style="display:none; background:var(--c0); box-shadow:0 4px 0 var(--c0s);"
               onclick="requestReplay()">
@@ -51,16 +50,14 @@
               onclick="requestNewGame()">
         Nouvelle partie
       </button>
-      <!-- non-creators see a waiting message -->
       <div id="win-waiting" style="display:none;font-size:13px;font-weight:600;color:var(--text-muted);">
         En attente du créateur…
       </div>
     </div>
   </div>
 
-  <!-- Socket.io client (served by Flask-SocketIO) -->
-  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-  <script src="{{ url_for('static', filename='js/socket.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/game.js') }}"></script>
+  <!-- socket.js must be loaded first — exposes the global `socket` object -->
+  <script src="/static/js/socket.js"></script>
+  <script src="/static/js/game.js"></script>
 </body>
 </html>

@@ -1,24 +1,42 @@
-# ── Build stage ───────────────────────────────────────────────
-# Use a slim Python 3.12 image to keep the final image light
-FROM python:3.12-slim
+# ── Stage 1 : build ───────────────────────────────────────────────────────────
+# Full Debian image with GCC, CMake, and static libs.
+# This stage is heavy (~500MB) but is DISCARDED after compilation.
+FROM debian:bookworm AS builder
 
-# Set working directory inside the container
+RUN apt-get update && apt-get install -y \
+    g++ \
+    cmake \
+    make \
+    libssl-dev \
+    libc6-dev \
+    libstdc++-12-dev \
+    zlib1g-dev \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
-# Copy dependency list first — Docker caches this layer separately
-# so a code change doesn't trigger a full pip reinstall
-COPY requirements.txt .
-
-# Install Python dependencies
-# --no-cache-dir keeps the image smaller
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy the rest of the project into the container
+# Copy the full source tree into the builder
 COPY . .
 
-# Expose the port Flask-SocketIO listens on
+# Configure and build in Release mode
+RUN cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
+    && cmake --build build --config Release -j$(nproc)
+
+
+# ── Stage 2 : final image ─────────────────────────────────────────────────────
+# Minimal scratch image — contains ONLY the binary + static assets.
+# No compiler, no headers, no shared libs. Typical size: ~10-20MB.
+FROM scratch
+
+WORKDIR /app
+
+# Copy the self-contained binary from the builder stage
+COPY --from=builder /app/build/karidor .
+
+# Copy static assets that Crow serves at runtime
+COPY --from=builder /app/build/static    ./static
+COPY --from=builder /app/build/templates ./templates
+
 EXPOSE 5000
 
-# Start the app via run.py using the eventlet worker
-# Eventlet is required for WebSocket support with Flask-SocketIO
-CMD ["python", "run.py"]
+CMD ["./karidor"]

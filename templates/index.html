@@ -8,7 +8,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css" />
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/game.css') }}" />
+  <!-- url_for() is Flask/Jinja2 only — Crow serves static files directly under /static/ -->
+  <link rel="stylesheet" href="/static/css/game.css" />
 </head>
 
 <body>
@@ -102,8 +103,8 @@
 
 </div>
 
-<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-<script src="{{ url_for('static', filename='js/socket.js') }}"></script>
-<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<!-- socket.js must be loaded first — exposes the global `socket` object -->
+<script src="/static/js/socket.js"></script>
+<script src="/static/js/main.js"></script>
 </body>
 </html>

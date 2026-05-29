@@ -1,0 +1,41 @@
+cmake_minimum_required(VERSION 3.16)
+project(karidor)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
+endif()
+
+find_package(OpenSSL REQUIRED)
+find_package(Threads REQUIRED)
+
+add_executable(karidor app/main.cpp)
+
+target_include_directories(karidor PRIVATE
+    app/                  # crow.h + asio.hpp sont ici
+    app/crow/             # headers internes de crow
+    app/asio/             # headers internes d'asio
+    app/models/
+    app/sockets/
+)
+
+target_link_libraries(karidor PRIVATE
+    OpenSSL::SSL
+    OpenSSL::Crypto
+    Threads::Threads
+)
+
+# Static linking — makes the binary fully self-contained
+# The final Docker image won't need any shared libraries
+target_link_options(karidor PRIVATE -static)
+
+# Copy static assets next to the binary after build
+# Crow's mustache::load_text() looks for files relative to the binary's cwd
+add_custom_command(TARGET karidor POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/static    ${CMAKE_BINARY_DIR}/static
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/templates ${CMAKE_BINARY_DIR}/templates
+)
