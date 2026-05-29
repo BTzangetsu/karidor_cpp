@@ -2,7 +2,20 @@
 
 class Rooms{
 
+    private:
+    static Rooms* rooms;
+
+     Rooms() {} // Private constructor to prevent instantiation
+
     public:
+
+
+    static Rooms& get_instance() {
+        if(!rooms){
+            rooms = new Rooms();
+        }
+        return *rooms;
+    }
 
     ~Rooms(){
         for(auto game : games){
@@ -92,3 +105,5 @@ class Rooms{
         }
     }
 };
+
+inline Rooms* Rooms::rooms = nullptr;
