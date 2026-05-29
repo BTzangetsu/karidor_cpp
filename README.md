@@ -4,7 +4,7 @@ A real-time multiplayer board game for 2, 3, or 4 players.
 Move your pawn across the board while blocking your opponents with walls.  
 First to reach the opposite side wins.
 
-> This is the **C++ branch** — backend built with [Crow](https://crowcpp.org) and native WebSockets.  
+> This is the **C++ version** — backend built with [Crow](https://crowcpp.org) and native WebSockets.  
 > See the `main` branch for the Python/Flask version.
 
 ---
