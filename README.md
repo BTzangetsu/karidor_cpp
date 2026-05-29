@@ -16,10 +16,9 @@ First to reach the opposite side wins.
 The build uses a **multi-stage Dockerfile**: the first stage compiles a fully static binary using GCC and CMake (~500MB, discarded after build), the second stage copies only the binary into a minimal `scratch` image (~15MB final size).
 
 ```bash
-# 1. Clone the repository and switch to the C++ branch
-git clone https://github.com/your-username/karidor.git
+# 1. Clone the repository 
+git clone https://github.com/your-username/karidor_cpp.git
 cd karidor
-git checkout cpp_version
 
 # 2. Build and start
 docker compose up -d
