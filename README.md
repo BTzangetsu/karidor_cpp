@@ -17,7 +17,7 @@ The build uses a **multi-stage Dockerfile**: the first stage compiles a fully st
 
 ```bash
 # 1. Clone the repository 
-git clone https://github.com/your-username/karidor_cpp.git
+git clone https://github.com/BTzangetsu/karidor_cpp.git
 cd karidor
 
 # 2. Build and start
